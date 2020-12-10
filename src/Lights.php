@@ -127,15 +127,12 @@ class Lights
             die("Brigthness must be numeric between 0 and 100");
         }
         $mac = $this->getDeviceMAC($device);
-        $data['headers'] = $this->client->setHeaders();
         $body['device'] = $mac;
         $body['model'] = $this->model_array[$mac];
         $body['cmd']['name'] = "brightness";
         $body['cmd']['value'] = $bl;
-        $data['body'] = json_encode($body);
 
-        $response = $this->client->client->request('PUT', $this->client::DEVICE_CONTROL, $data);
-        $this->client->setRateVars($response->getHeaders());
+        $response = $this->client->makeAPICall("PUT", $this->client::DEVICE_CONTROL, json_encode($body));
         return $response->getBody();
     }
 
@@ -155,15 +152,13 @@ class Lights
             die("Brigthness must be numeric between 2000 and 9000");
         }
         $mac = $this->getDeviceMAC($device);
-        $data['headers'] = $this->client->setHeaders();
+
         $body['device'] = $mac;
         $body['model'] = $this->model_array[$mac];
         $body['cmd']['name'] = "colorTem";
         $body['cmd']['value'] = $tl;
-        $data['body'] = json_encode($body);
 
-        $response = $this->client->client->request('PUT', $this->client::DEVICE_CONTROL, $data);
-        $this->client->setRateVars($response->getHeaders());
+        $response = $this->client->makeAPICall("PUT", $this->client::DEVICE_CONTROL, json_encode($body));
         return $response->getBody();
     }
 
@@ -182,17 +177,13 @@ class Lights
     public function setColor($device, $r, $g, $b)
     {
         $mac = $this->getDeviceMAC($device);
-        $data['headers'] = $this->client->setHeaders();
         $body['device'] = $mac;
         $body['model'] = $this->model_array[$mac];
         $body['cmd']['name'] = "color";
         $body['cmd']['value']['r'] = $r;
         $body['cmd']['value']['g'] = $g;
         $body['cmd']['value']['b'] = $b;
-        $data['body'] = json_encode($body);
-
-        $response = $this->client->client->request('PUT', $this->client::DEVICE_CONTROL, $data);
-        $this->client->setRateVars($response->getHeaders());
+        $response = $this->client->makeAPICall("PUT", $this->client::DEVICE_CONTROL, json_encode($body));
         return $response->getBody();
     }
 
@@ -208,10 +199,8 @@ class Lights
     public function getDeviceState($device)
     {
         $mac = $this->getDeviceMAC($device);
-        $data['headers'] = $this->client->setHeaders();
         $url = $this->client::DEVICE_STATE . "?device=" . $mac . "&model=" . $this->model_array[$mac];
-        $response = $this->client->client->request('GET', $url, $data);
-        $this->client->setRateVars($response->getHeaders());
+        $response = $this->client->makeAPICall("GET", $url);
         return $response->getBody();
     }
 }

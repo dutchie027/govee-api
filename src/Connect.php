@@ -207,27 +207,10 @@ class Connect
      */
     public function getDeviceList()
     {
-        $data['headers'] = $this->setHeaders();
         $url = self::API_URL . self::DEVICE_ENDPOINT;
-        $response = $this->client->request('GET', $url, $data);
+        $response = $this->makeAPICall("GET", $url);
         $body_array = json_decode($response->getBody(), true);
         return $body_array['data']['devices'];
-    }
-
-    /**
-     * getLimits
-     * Returns Limit Headers
-     *
-     *
-     * @return array
-     *
-     */
-    public function getLimits()
-    {
-        $data['headers'] = $this->setHeaders();
-        $url = self::API_URL . self::PING_ENDPOINT;
-        $response = $this->client->request('GET', $url, $data);
-        return $response;
     }
 
     /**
@@ -355,11 +338,22 @@ class Connect
     }
 
 
+    public function makeAPICall($type, $url, $body = null)
+    {
+        $data['headers'] = $this->setHeaders();
+        $data['body'] = $body;
+        if ($this->checkPing()) {
+            $request = $this->client->request($type, $url, $data);
+        }
+        $this->setRateVars($request->getHeaders());
+        return $request;
+    }
+
     public function checkPing()
     {
         $url = self::API_URL . self::PING_ENDPOINT;
         $response = $this->client->request('GET', $url);
-        if (preg_match("/pong/", $response->getBody())) {
+        if (preg_match("/pong/i", $response->getBody())) {
             return true;
         } else {
             die("API Seems Offline or you have connectivity issues at present.");
