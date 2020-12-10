@@ -1,0 +1,19 @@
+{
+    "name": "dutchie027/govee",
+    "description": "Govee Lights",
+    "type": "library",
+    "license": "MIT",
+    "require": {
+        "guzzlehttp/guzzle": "^7.2",
+        "monolog/monolog": "^2.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "dutchie027\\govee\\": "src/"
+        }
+    },
+    "authors": [{
+        "name": "Justin Rodino",
+        "email": "justin@227volts.com"
+    }]
+}
