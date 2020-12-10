@@ -28,6 +28,7 @@ class Lights
         $data['body'] = json_encode($body);
 
         $response = $this->client->client->request('PUT', $this->client::DEVICE_CONTROL, $data);
+        $this->client->setRateVars($response->getHeaders());
         return $response->getBody();
     }
 
@@ -56,8 +57,7 @@ class Lights
         } else {
             if (in_array($device, $this->mac_array)) {
                 return $this->name_array[$device];
-            }
-            else {
+            } else {
                 die("Device Not Found");
             }
         }
@@ -107,6 +107,7 @@ class Lights
         $data['body'] = json_encode($body);
 
         $response = $this->client->client->request('PUT', $this->client::DEVICE_CONTROL, $data);
+        $this->client->setRateVars($response->getHeaders());
         return $response->getBody();
     }
 
@@ -134,6 +135,7 @@ class Lights
         $data['body'] = json_encode($body);
 
         $response = $this->client->client->request('PUT', $this->client::DEVICE_CONTROL, $data);
+        $this->client->setRateVars($response->getHeaders());
         return $response->getBody();
     }
 
@@ -161,9 +163,10 @@ class Lights
         $data['body'] = json_encode($body);
 
         $response = $this->client->client->request('PUT', $this->client::DEVICE_CONTROL, $data);
+        $this->client->setRateVars($response->getHeaders());
         return $response->getBody();
     }
-    
+
     /**
      * setColor
      * Sets the RGB Color of a strand of lights based on MAC or Name ($device) and RGB
@@ -189,6 +192,7 @@ class Lights
         $data['body'] = json_encode($body);
 
         $response = $this->client->client->request('PUT', $this->client::DEVICE_CONTROL, $data);
+        $this->client->setRateVars($response->getHeaders());
         return $response->getBody();
     }
 
@@ -207,7 +211,7 @@ class Lights
         $data['headers'] = $this->client->setHeaders();
         $url = $this->client::DEVICE_STATE . "?device=" . $mac . "&model=" . $this->model_array[$mac];
         $response = $this->client->client->request('GET', $url, $data);
+        $this->client->setRateVars($response->getHeaders());
         return $response->getBody();
     }
-
 }

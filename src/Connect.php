@@ -52,6 +52,27 @@ class Connect
     private $p_token;
 
     /**
+     * Remaining Times To Call the API
+     *
+     * @var string
+     */
+    public $rate_remain;
+
+    /**
+     * EPOCH when rate resets
+     *
+     * @var string
+     */
+    public $rate_reset;
+
+    /**
+     * Total Rate Limit
+     *
+     * @var string
+     */
+    public $rate_total;
+
+    /**
      * Log Directory
      *
      * @var string
@@ -158,6 +179,22 @@ class Connect
     public function getLogLocation()
     {
         return $this->pGetLogPath();
+    }
+
+    /**
+     * setRateVars
+     * Takes a header array and sets the rate variables
+     *
+     * @param array $header
+     *
+     * @return void
+     *
+     */
+    public function setRateVars($header)
+    {
+        $this->rate_remain = $header['Rate-Limit-Remaining'];
+        $this->rate_reset = $header['Rate-Limit-Reset'];
+        $this->rate_total = $header['Rate-Limit-Total'];
     }
 
     /**
@@ -315,5 +352,17 @@ class Connect
             $randomString .= $characters[rand(0, $charactersLength - 1)];
         }
         return $randomString;
+    }
+
+
+    public function checkPing()
+    {
+        $url = self::API_URL . self::PING_ENDPOINT;
+        $response = $this->client->request('GET', $url);
+        if (preg_match("/pong/", $response->getBody())) {
+            return true;
+        } else {
+            die("API Seems Offline or you have connectivity issues at present.");
+        }
     }
 }
