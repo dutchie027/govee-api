@@ -1,7 +1,7 @@
 {
     "name": "dutchie027/govee",
-    "description": "A simple PHP package for controlling Govee Lighting systems via their API",
-    "keywords": ["php", "home automation", "govee", "lightsS"],
+    "description": "A simple PHP package for controlling Govee Wi-Fi systems via their API",
+    "keywords": ["php", "home automation", "govee", "lights", "plugs"],
     "license": "BSD-2-Clause",
     "type": "library",
     "require": {

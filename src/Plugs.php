@@ -6,6 +6,6 @@ use GuzzleHttp\Client as Guzzle;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
-class Lights
+class Plugs
 {
 }

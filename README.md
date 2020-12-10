@@ -20,7 +20,7 @@ composer require dutchie027/govee
 
 ```php
 // Instantiate with defaults
-$lights = new dutchie027\govee\Lights("GOVEE-API-KEY");
+$govee = new dutchie027\govee\Connect("GOVEE-API-KEY");
 
 // Instantiate without defaults, this allows you to change things
 // like log location, directory, the tag and possible future settings.
@@ -31,7 +31,7 @@ $settings = [
 	'log_level' => 'error'
 ];
 
-$client = new dutchie027\govee\Lights("GOVEE-API-KEY", $settings);
+$govee = new dutchie027\govee\Connect("GOVEE-API-KEY", $settings);
 ```
 
 #### Settings
@@ -48,12 +48,12 @@ Field | Type | Description | Default Value
 ### Get Device Count
 
 ```php
-print $lights->getDeviceCount();
+print $govee->getDeviceCount();
 ```
 
 ### Get An Array of All Devices
 ```php
-$array = $lights->getDeviceList();
+$array = $govee->getDeviceList();
 ```
 
 #### Example Return Array
@@ -83,7 +83,7 @@ Array
 ### Get An Array of All Callable MAC Addresses 
 
 ```php
-$macArray = $lights->getDeviceMACArray();
+$macArray = $govee->getDeviceMACArray();
 ```
 
 #### Example Return Array
@@ -98,7 +98,7 @@ Array
 
 ### Get An Array of All Device Names
 ```php
-$nameArray = $lights->getDeviceNameArray();
+$nameArray = $govee->getDeviceNameArray();
 ```
 
 #### Example Return Array
@@ -113,7 +113,7 @@ Array
 
 ### Get the location of the log file
 ```php
-print $lights->getLogLocation();
+print $govee->getLogLocation();
 ```
 
 #### Example Return String
