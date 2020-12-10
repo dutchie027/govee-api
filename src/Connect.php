@@ -14,35 +14,35 @@ class Connect
      *
      * @const string
      */
-    private const API_URL = 'https://developer-api.govee.com';
+    public const API_URL = 'https://developer-api.govee.com';
 
     /**
      * Ping Endpoint
      *
      * @const string
      */
-    private const PING_ENDPOINT = '/ping';
+    public const PING_ENDPOINT = '/ping';
 
     /**
      * RAW Device Endpoint
      *
      * @const string
      */
-    private const DEVICE_ENDPOINT = '/v1/devices';
+    public const DEVICE_ENDPOINT = '/v1/devices';
 
     /**
      * Control Endpoint
      *
      * @const string
      */
-    private const DEVICE_CONTROL = self::API_URL . self::DEVICE_ENDPOINT . '/control';
+    public const DEVICE_CONTROL = self::API_URL . self::DEVICE_ENDPOINT . '/control';
 
     /**
      * Device State Endpoint
      *
      * @const string
      */
-    private const DEVICE_STATE = self::API_URL . self::DEVICE_ENDPOINT . '/state';
+    public const DEVICE_STATE = self::API_URL . self::DEVICE_ENDPOINT . '/state';
 
     /**
      * API Token
@@ -97,12 +97,12 @@ class Connect
      *
      * @var \GuzzleHttp\Client
      */
-    protected $guzzle;
+    public $client;
 
     /**
      * Default constructor
      */
-    public function __construct($token, array $attributes = [], Guzzle $guzzle = null)
+    public function __construct($token, array $attributes = [], Guzzle $client = null)
     {
         $this->p_token = $token;
         if (isset($attributes['log_dir']) && is_dir($attributes['log_dir'])) {
@@ -144,7 +144,7 @@ class Connect
         } else {
             $this->p_log->pushHandler(new StreamHandler($this->pGetLogPath(), Logger::INFO));
         }
-        $this->guzzle = $guzzle ? : new Guzzle();
+        $this->client = $client ? : new Guzzle();
     }
 
     /**
@@ -170,9 +170,9 @@ class Connect
      */
     public function getDeviceList()
     {
-        $ha = $this->setHeaders();
+        $data['headers'] = $this->setHeaders();
         $url = self::API_URL . self::DEVICE_ENDPOINT;
-        $response = $this->guzzle->request('GET', $url, $ha);
+        $response = $this->client->request('GET', $url, $data);
         $body_array = json_decode($response->getBody(), true);
         return $body_array['data']['devices'];
     }
@@ -187,9 +187,9 @@ class Connect
      */
     public function getLimits()
     {
-        $ha = $this->setHeaders();
+        $data['headers'] = $this->setHeaders();
         $url = self::API_URL . self::PING_ENDPOINT;
-        $response = $this->guzzle->request('GET', $url, $ha);
+        $response = $this->client->request('GET', $url, $data);
         return $response;
     }
 
@@ -248,7 +248,7 @@ class Connect
      * @return string
      *
      */
-    private function getAPIToken()
+    protected function getAPIToken()
     {
         return $this->p_token;
     }
@@ -274,7 +274,7 @@ class Connect
      * @return string
      *
      */
-    private function pGetLogPath()
+    protected function pGetLogPath()
     {
         return $this->p_log_location . '/' . $this->p_log_name;
     }
@@ -287,11 +287,12 @@ class Connect
      * @return array
      *
      */
-    private function setHeaders()
+    public function setHeaders()
     {
-        $array['headers'] = [
+        $array = [
             'User-Agent' => 'testing/1.0',
-            'Govee-API-Key'     => $this->getAPIToken()
+            'Content-Type' => 'application/json',
+            'Govee-API-Key' => $this->getAPIToken()
         ];
         return $array;
     }
