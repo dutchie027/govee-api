@@ -8,21 +8,75 @@ use Monolog\Handler\StreamHandler;
 
 class Lights
 {
-    // api url
+
+    /**
+     * Root of the API.
+     *
+     * @const string
+     */
     private const API_URL = 'https://developer-api.govee.com';
 
+    /**
+     * Ping Endpoint
+     *
+     * @const string
+     */
     private const PING_ENDPOINT = '/ping';
 
+    /**
+     * RAW Device Endpoint
+     *
+     * @const string
+     */
     private const DEVICE_ENDPOINT = '/v1/devices';
 
+    /**
+     * Control Endpoint
+     *
+     * @const string
+     */
     private const DEVICE_CONTROL = self::API_URL . self::DEVICE_ENDPOINT . '/control';
 
+    /**
+     * Device State Endpoint
+     *
+     * @const string
+     */
     private const DEVICE_STATE = self::API_URL . self::DEVICE_ENDPOINT . '/state';
 
+    /**
+     * API Token
+     *
+     * @var string
+     */
     private $p_token;
+
+    /**
+     * Log Directory
+     *
+     * @var string
+     */
     private $p_log_location;
+
+    /**
+     * Log Name
+     *
+     * @var string
+     */
     private $p_log_name;
+
+    /**
+     * Log File Tag
+     *
+     * @var string
+     */
     private $p_log = "govee";
+
+    /**
+     * Log Types
+     *
+     * @var array
+     */
     private $log_literals = [ "debug",
         "info",
         "notice",
@@ -30,6 +84,7 @@ class Lights
         "critical",
         "error"
     ];
+
     /**
      * The Guzzle HTTP client instance.
      *
@@ -85,11 +140,27 @@ class Lights
         $this->guzzle = $guzzle ? : new Guzzle();
     }
 
+    /**
+     * getLogLocation
+     * Alias to Get Log Path
+     *
+     *
+     * @return string
+     *
+     */
     public function getLogLocation()
     {
         return $this->pGetLogPath();
     }
 
+    /**
+     * getDeviceList
+     * Returns Full Device List Array
+     *
+     *
+     * @return array
+     *
+     */
     public function getDeviceList()
     {
         $ha = $this->setHeaders();
@@ -99,6 +170,14 @@ class Lights
         return $body_array['data']['devices'];
     }
 
+    /**
+     * getLimits
+     * Returns Limit Headers
+     *
+     *
+     * @return array
+     *
+     */
     public function getLimits()
     {
         $ha = $this->setHeaders();
@@ -107,11 +186,27 @@ class Lights
         return $response;
     }
 
+    /**
+     * getDeviceCount
+     * Returns total number of controllable devices
+     *
+     *
+     * @return int
+     *
+     */
     public function getDeviceCount()
     {
         return count($this->getDeviceList());
     }
 
+    /**
+     * getDeviceMACArray
+     * Returns array of controllable MAC addresses
+     *
+     *
+     * @return array
+     *
+     */
     public function getDeviceMACArray()
     {
         $array = $this->getDeviceList();
@@ -121,6 +216,14 @@ class Lights
         return $dev;
     }
 
+    /**
+     * getDeviceNameArray
+     * Returns Array of Device Names
+     *
+     *
+     * @return array
+     *
+     */
     public function getDeviceNameArray()
     {
         $array = $this->getDeviceList();
@@ -130,16 +233,40 @@ class Lights
         return $dev;
     }
 
+    /**
+     * getAPIToken
+     * Returns the stored API Token
+     *
+     *
+     * @return string
+     *
+     */
     private function getAPIToken()
     {
         return $this->p_token;
     }
 
+    /**
+     * pGetLogPath
+     * Returns full path and name of the log file
+     *
+     *
+     * @return string
+     *
+     */
     private function pGetLogPath()
     {
         return $this->p_log_location . '/' . $this->p_log_name;
     }
 
+    /**
+     * setHeaders
+     * Sets the headers using the API Token
+     *
+     *
+     * @return array
+     *
+     */
     private function setHeaders()
     {
         $array['headers'] = [
@@ -149,6 +276,15 @@ class Lights
         return $array;
     }
 
+    /**
+     * pGenRandomString
+     * Generates a random string of $length
+     *
+     * @param int $length
+     *
+     * @return string
+     *
+     */
     private function pGenRandomString($length = 6)
     {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
