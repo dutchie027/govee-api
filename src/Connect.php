@@ -353,7 +353,12 @@ class Connect
     {
         $url = self::API_URL . self::PING_ENDPOINT;
         $response = $this->client->request('GET', $url);
-        if (preg_match("/pong/i", $response->getBody())) {
+        if ($response->getStatusCode() == 200) {
+            // in future we might want to regex match the word
+            // pong (case insensitive) which is what their endpoint
+            // currently returns. However, 200 is much safer than
+            // looking for a specific word
+            //if (preg_match("/pong/i", $response->getBody())) {
             return true;
         } else {
             die("API Seems Offline or you have connectivity issues at present.");
