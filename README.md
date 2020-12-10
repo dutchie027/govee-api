@@ -22,9 +22,8 @@ composer require dutchie027/govee
 // Instantiate with defaults
 $lights = new dutchie027\govee\Lights("GOVEE-API-KEY");
 
-// Instantiate without defaults, so all messages created
-// will be sent from 'Cyril' and to the #accounting channel
-// by default. Any names like @regan or #channel will also be linked.
+// Instantiate without defaults, this allows you to change things
+// like log location, directory, the tag and possible future settings.
 $settings = [
 	'log_dir' => '/tmp',
 	'log_name' => 'govee-lights',
