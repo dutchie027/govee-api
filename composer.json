@@ -2,7 +2,7 @@
     "name": "dutchie027/govee",
     "description": "A simple PHP package for controlling Govee Wi-Fi systems via their API",
     "keywords": ["php", "home automation", "govee", "lights", "plugs"],
-    "license": "BSD-2-Clause",
+    "license": "MIT",
     "type": "library",
     "require": {
         "guzzlehttp/guzzle": "^7.2",
