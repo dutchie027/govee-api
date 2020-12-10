@@ -2,10 +2,12 @@
 
 namespace dutchie027\govee;
 
-use GuzzleHttp\Client as Guzzle;
-use Monolog\Logger;
-use Monolog\Handler\StreamHandler;
-
 class Plugs
 {
+    protected $client;
+
+    public function __construct(Connect $client)
+    {
+        $this->client = $client;
+    }
 }

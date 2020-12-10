@@ -59,6 +59,13 @@ class Connect
     private $p_log_location;
 
     /**
+     * Log Reference
+     *
+     * @var string
+     */
+    protected $p_log;
+
+    /**
      * Log Name
      *
      * @var string
@@ -70,7 +77,7 @@ class Connect
      *
      * @var string
      */
-    private $p_log = "govee";
+    private $p_log_tag = "govee";
 
     /**
      * Log Types
@@ -115,7 +122,7 @@ class Connect
         if (isset($attributes['log_tag'])) {
             $this->p_log = new Logger($attributes['log_tag']);
         } else {
-            $this->p_log = new Logger($this->p_log);
+            $this->p_log = new Logger($this->p_log_tag);
         }
 
         if (isset($attributes['log_level']) && in_array($attributes['log_level'], $this->log_literals)) {
@@ -244,6 +251,19 @@ class Connect
     private function getAPIToken()
     {
         return $this->p_token;
+    }
+
+    /**
+     * getLogPointer
+     * Returns a referencd to the logger
+     *
+     *
+     * @return reference
+     *
+     */
+    public function getLogPointer()
+    {
+        return $this->p_log;
     }
 
     /**
