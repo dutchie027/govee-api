@@ -26,12 +26,24 @@ $govee = new dutchie027\govee\Connect("GOVEE-API-KEY");
 // like log location, directory, the tag and possible future settings.
 $settings = [
 	'log_dir' => '/tmp',
-	'log_name' => 'govee-lights',
+	'log_name' => 'govee-api',
 	'log_tag' => 'mylights',
 	'log_level' => 'error'
 ];
 
 $govee = new dutchie027\govee\Connect("GOVEE-API-KEY", $settings);
+```
+
+### Placeholder for Lights
+```php
+// Don't forget to first make a "Connect" connection and then reference it
+$lights = new dutchie027\govee\Lights($govee);
+```
+
+### Placeholder for Plugs
+```php
+// Don't forget to first make a "Connect" connection and then reference it
+$plugs = new dutchie027\govee\Plugs($govee);
 ```
 
 #### Settings
