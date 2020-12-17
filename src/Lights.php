@@ -9,6 +9,15 @@ class Lights
     protected $client;
 
     /**
+     * Default constructor
+     */
+    public function __construct(Connect $client)
+    {
+        $this->client = $client;
+        $this->getLights();
+    }
+
+    /**
      * turnOn
      * Turns A Light On based on MAC or Name ($device)
      *
@@ -33,12 +42,27 @@ class Lights
     }
 
     /**
-     * Default constructor
+     * turnOff
+     * Turns A Light Off based on MAC or Name ($device)
+     *
+     * @param string $device
+     *
+     * @return string
+     *
      */
-    public function __construct(Connect $client)
+    public function turnOff($device)
     {
-        $this->client = $client;
-        $this->getLights();
+        $mac = $this->getDeviceMAC($device);
+        $data['headers'] = $this->client->setHeaders();
+        $body['device'] = $mac;
+        $body['model'] = $this->model_array[$mac];
+        $body['cmd']['name'] = "turn";
+        $body['cmd']['value'] = "off";
+        $data['body'] = json_encode($body);
+
+        $response = $this->client->client->request('PUT', $this->client::DEVICE_CONTROL, $data);
+        $this->client->setRateVars($response->getHeaders());
+        return $response->getBody();
     }
 
     /**
@@ -85,30 +109,6 @@ class Lights
                 $this->model_array[$mac] = $model;
             }
         }
-    }
-
-    /**
-     * turnOff
-     * Turns A Light Off based on MAC or Name ($device)
-     *
-     * @param string $device
-     *
-     * @return string
-     *
-     */
-    public function turnOff($device)
-    {
-        $mac = $this->getDeviceMAC($device);
-        $data['headers'] = $this->client->setHeaders();
-        $body['device'] = $mac;
-        $body['model'] = $this->model_array[$mac];
-        $body['cmd']['name'] = "turn";
-        $body['cmd']['value'] = "off";
-        $data['body'] = json_encode($body);
-
-        $response = $this->client->client->request('PUT', $this->client::DEVICE_CONTROL, $data);
-        $this->client->setRateVars($response->getHeaders());
-        return $response->getBody();
     }
 
     /**
