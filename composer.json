@@ -13,6 +13,11 @@
             "dutchie027\\govee\\": "src/"
         }
     },
+    "support": {
+        "forum": "https://github.com/dutchie027/govee-api/discussions",
+        "issues": "https://github.com/dutchie027/govee-api/issues",
+        "source": "https://github.com/dutchie027/govee-api/tree/main"
+    },
     "authors": [{
         "name": "Justin Rodino",
         "email": "justin@227volts.com"
