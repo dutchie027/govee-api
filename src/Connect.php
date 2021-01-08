@@ -364,4 +364,16 @@ class Connect
             die("API Seems Offline or you have connectivity issues at present.");
         }
     }
+
+    public function lights()
+    {
+        $lights = new Lights($this);
+        return $lights;
+    }
+
+    public function plugs()
+    {
+        $plugs = new Plugs($this);
+        return $plugs;
+    }
 }
