@@ -1,5 +1,9 @@
 # Govee PHP API
 
+[![Latest Stable Version](https://poser.pugx.org/dutchie027/govee/v)](//packagist.org/packages/dutchie027/govee)
+[![Total Downloads](https://poser.pugx.org/dutchie027/govee/downloads)](//packagist.org/packages/dutchie027/govee)
+[![License](https://poser.pugx.org/dutchie027/govee/license)](//packagist.org/packages/dutchie027/govee)
+
 A simple PHP package that allows you to control [Govee Smart Lights](https://www.govee.com/) using their [API](https://govee-public.s3.amazonaws.com/developer-docs/GoveeAPIReference.pdf).
 
 ## Requirements
