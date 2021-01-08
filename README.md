@@ -34,10 +34,10 @@ $govee = new dutchie027\govee\Connect("GOVEE-API-KEY");
 // Instantiate without defaults, this allows you to change things
 // like log location, directory, the tag and possible future settings.
 $settings = [
-	'log_dir' => '/tmp',
-	'log_name' => 'govee-api',
-	'log_tag' => 'mylights',
-	'log_level' => 'error'
+  'log_dir' => '/tmp',
+  'log_name' => 'govee-api',
+  'log_tag' => 'mylights',
+  'log_level' => 'error'
 ];
 
 $govee = new dutchie027\govee\Connect("GOVEE-API-KEY", $settings);
@@ -45,12 +45,12 @@ $govee = new dutchie027\govee\Connect("GOVEE-API-KEY", $settings);
 
 #### Settings
 
-The default settings are fine, however you might want to override the defaults or use your own.**NOTE: All settings are optional and you don't need to provide any**. 
+The default settings are fine, however you might want to override the defaults or use your own.**NOTE: All settings are optional and you don't need to provide any**.
 
 Field | Type | Description | Default Value
 ----- | ---- | ----------- | -------------
 `log_dir` | string | The directory where the log file is stored | [sys_get_temp_dir()](https://www.php.net/manual/en/function.sys-get-temp-dir.php)
-`log_name` | string | The name of the log file that is created in `log_dir`. If you don't put .log at the end, it will append it | 6 random characters + [time()](https://www.php.net/manual/en/function.time.php) + .log 
+`log_name` | string | The name of the log file that is created in `log_dir`. If you don't put .log at the end, it will append it | 6 random characters + [time()](https://www.php.net/manual/en/function.time.php) + .log
 `log_tag` | string | If you share this log file with other applications, this is the tag used in the log file | govee
 `log_level` | string | The level of logging the application will do. This must be either `debug`, `info`, `notice`, `warning`, `critical` or `error`. If it is not one of those values it will fail to the default | `warning`
 
@@ -63,12 +63,14 @@ print $govee->getDeviceCount();
 ```
 
 ### Get An Array of All Devices
+
 ```php
 $array = $govee->getDeviceList();
 ```
 
 #### Example Return Array
-```
+
+```json
 Array
 (
     [0] => Array
@@ -91,14 +93,15 @@ Array
 )
 ```
 
-### Get An Array of All Callable MAC Addresses 
+### Get An Array of All Callable MAC Addresses
 
 ```php
 $macArray = $govee->getDeviceMACArray();
 ```
 
-#### Example Return Array
-```
+#### MAC Return Array
+
+```php
 Array
 (
     [0] => A9:E9:0A:04:AD:CD:12:34
@@ -108,12 +111,14 @@ Array
 ```
 
 ### Get An Array of All Device Names
+
 ```php
 $nameArray = $govee->getDeviceNameArray();
 ```
 
-#### Example Return Array
-```
+#### Device Name Return Array
+
+```php
 Array
 (
     [0] => My-Living-Room
@@ -123,12 +128,14 @@ Array
 ```
 
 ### Get the location of the log file
+
 ```php
 print $govee->getLogLocation();
 ```
 
 #### Example Return String
-```
+
+```txt
 /tmp/2Zo46b.1607566740.log
 ```
 
@@ -145,8 +152,6 @@ require_once ('vendor/autoload.php');
 // Instantiate with defaults
 $govee = new dutchie027\govee\Connect("GOVEE-API-KEY");
 
-// Now lets connect to the lights
-$lights = new dutchie027\govee\Lights($govee);
 ```
 
 Once you've got a reference to the lights, it will preload all of the MAC Address(es) and name(s) of the devices.
@@ -154,34 +159,37 @@ Once you've got a reference to the lights, it will preload all of the MAC Addres
 #### Turning A Light ON
 
 To turn a light on, simply feed it the MAC address or the name of the light.
+
 ```php
-$lights->turnOn("AC:14:A3:D5:E6:C4:3D:AE");
+$govee->lights()->turnOn("AC:14:A3:D5:E6:C4:3D:AE");
 
 or
 
-$lights->turnOn("Office-Wall");
+$govee->lights()->turnOn("Office-Wall");
 ```
 
 #### Turning A Light OFF
 
 Like turning a light on, to turn a light off, simply feed the MAC address or the name of the light.
+
 ```php
-$lights->turnOff("AC:14:A3:D5:E6:C4:3D:AE");
+$govee->lights()->turnOff("AC:14:A3:D5:E6:C4:3D:AE");
 
 or
 
-$lights->turnOff("Office-Wall");
+$govee->lights()->turnOff("Office-Wall");
 ```
 
 #### Adjusting BRIGHTNESS of A Light
 
 To adjust the brigthness, simply give the name or MAC and the brightness, an INT between 0 and 100.
+
 ```php
-$lights->setBrightness("AC:14:A3:D5:E6:C4:3D:AE", 75);
+$govee->lights()->setBrightness("AC:14:A3:D5:E6:C4:3D:AE", 75);
 
 or
 
-$lights->setBrightness("Office-Wall", 75);
+$govee->lights()->setBrightness("Office-Wall", 75);
 ```
 
 #### Changing the COLOR of A Light
@@ -189,36 +197,38 @@ $lights->setBrightness("Office-Wall", 75);
 To adjust the color, simply give the name or MAC and the brightness and then feed the R, G, B colors you'd like the device to set itself to. *NOTE* the values for Red, Green and Blue must be between 0 and 255.
 
 ```php
-$lights->setColor("AC:14:A3:D5:E6:C4:3D:AE", 255, 255, 0);
+$govee->lights()->setColor("AC:14:A3:D5:E6:C4:3D:AE", 255, 255, 0);
 
 or
 
-$lights->setBrightness("Office-Wall", 255, 0, 0);
+$govee->lights()->setBrightness("Office-Wall", 255, 0, 0);
 ```
 
 #### Changing the TEMPERATURE of A Light
 
 To adjust the temperature, simply give the name or MAC and the name and then feed the temperature. *NOTE* Temperature must be an INT between 2000 and 9000.
+
 ```php
-$lights->setTemp("AC:14:A3:D5:E6:C4:3D:AE", 5000);
+$govee->lights()->setTemp("AC:14:A3:D5:E6:C4:3D:AE", 5000);
 
 or
 
-$lights->setTemp("Office-Wall", 5000);
+$govee->lights()->setTemp("Office-Wall", 5000);
 ```
 
 #### Get the STATE of A Light
+
 To get all of the details about a light, simply feed getDeviceState the name or the MAC address. You'll get a JSON return you can then either read or feed to `json_decode` and turn in to an array to use/read.
 
 ```php
-$lights->getDeviceState("AC:14:A3:D5:E6:C4:3D:AE");
+$govee->lights()->getDeviceState("AC:14:A3:D5:E6:C4:3D:AE");
 
 or
 
-$lights->getDeviceState("Office-Wall");
+$govee->lights()->getDeviceState("Office-Wall");
 ```
 
-```
+```json
 {
   "data": {
     "device": "AC:14:A3:D5:E6:C4:3D:AE",
@@ -247,10 +257,24 @@ $lights->getDeviceState("Office-Wall");
 
 ## Plugs Functions
 
-### Placeholder for Plugs
+### Turn On A Plug
+
 ```php
-// Don't forget to first make a "Connect" connection and then reference it
-$plugs = new dutchie027\govee\Plugs($govee);
+$govee->plugs()->turnOn("AC:14:A3:D5:E6:C4:3D:AE");
+
+or
+
+$govee->plugs()->turnOn("Office-Wall");
+```
+
+### Turn Off A Plug
+
+```php
+$govee->plugs()->turnOff("AC:14:A3:D5:E6:C4:3D:AE");
+
+or
+
+$govee->plugs()->turnOff("Office-Wall");
 ```
 
 ## Contributing
