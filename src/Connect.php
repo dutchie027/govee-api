@@ -3,6 +3,8 @@
 namespace dutchie027\govee;
 
 use GuzzleHttp\Client as Guzzle;
+use GuzzleHttp\Psr7;
+use GuzzleHttp\Exception\RequestException;
 use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
 
@@ -105,7 +107,8 @@ class Connect
      *
      * @var array
      */
-    private $log_literals = [ "debug",
+    private $log_literals = [
+        "debug",
         "info",
         "notice",
         "warning",
@@ -165,7 +168,7 @@ class Connect
         } else {
             $this->p_log->pushHandler(new StreamHandler($this->pGetLogPath(), Logger::INFO));
         }
-        $this->client = $client ? : new Guzzle();
+        $this->client = $client ?: new Guzzle();
     }
 
     /**
@@ -343,7 +346,15 @@ class Connect
         $data['headers'] = $this->setHeaders();
         $data['body'] = $body;
         if ($this->checkPing()) {
-            $request = $this->client->request($type, $url, $data);
+            try {
+                $request = $this->client->request($type, $url, $data);
+            } catch (RequestException $e) {
+                if ($e->hasResponse()) {
+                    $response = $e->getResponse();
+                    print $response->getBody();
+                    exit;
+                }
+            }
         }
         $this->setRateVars($request->getHeaders());
         return $request;
