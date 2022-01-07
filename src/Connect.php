@@ -86,7 +86,7 @@ class Connect
      *
      * @var string
      */
-    protected $p_log;
+    public $p_log;
 
     /**
      * Log Name
