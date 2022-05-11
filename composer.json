@@ -5,8 +5,15 @@
     "license": "MIT",
     "type": "library",
     "require": {
-        "guzzlehttp/guzzle": "^7.2",
-        "monolog/monolog": "^2.1"
+        "guzzlehttp/guzzle": "^7.4",
+        "monolog/monolog": "^2.5",
+        "php": "^8.0"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.8",
+        "phpstan/phpstan": "^1.5",
+        "phpunit/phpunit": "^9.5.20",
+        "vimeo/psalm": "^4.22"
     },
     "autoload": {
         "psr-4": {
@@ -20,6 +27,25 @@
     },
     "authors": [{
         "name": "Justin Rodino",
-        "email": "justin@227volts.com"
-    }]
+        "email": "justin@rodino.dev"
+    }],
+    "scripts": {
+        "fix": "./vendor/bin/php-cs-fixer fix",
+        "test": "./vendor/bin/phpunit",
+        "stan": "./vendor/bin/phpstan --no-progress",
+        "psalm": "./vendor/bin/psalm.phar --no-progress --show-info=true",
+        "runall": [
+            "@fix",
+            "@test",
+            "@stan",
+            "@psalm"
+        ]
+    },
+    "scripts-descriptions": {
+        "test": "Runs phpunit tests",
+        "fix": "Runs PHP-CS Fixer",
+        "stan": "Runs phpstan to check standards",
+        "psalm": "Runs psalm to check code",
+        "runall": "Runs all tests (fixer, phpunit, phpstan, psalm)"
+    }
 }

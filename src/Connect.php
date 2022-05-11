@@ -3,14 +3,12 @@
 namespace dutchie027\govee;
 
 use GuzzleHttp\Client as Guzzle;
-use GuzzleHttp\Psr7;
 use GuzzleHttp\Exception\RequestException;
-use Monolog\Logger;
 use Monolog\Handler\StreamHandler;
+use Monolog\Logger;
 
 class Connect
 {
-
     /**
      * Root of the API.
      *
@@ -100,7 +98,7 @@ class Connect
      *
      * @var string
      */
-    private $p_log_tag = "govee";
+    private $p_log_tag = 'govee';
 
     /**
      * Log Types
@@ -108,12 +106,12 @@ class Connect
      * @var array
      */
     private $log_literals = [
-        "debug",
-        "info",
-        "notice",
-        "warning",
-        "critical",
-        "error"
+        'debug',
+        'info',
+        'notice',
+        'warning',
+        'critical',
+        'error',
     ];
 
     /**
@@ -129,6 +127,7 @@ class Connect
     public function __construct($token, array $attributes = [], Guzzle $client = null)
     {
         $this->p_token = $token;
+
         if (isset($attributes['log_dir']) && is_dir($attributes['log_dir'])) {
             $this->p_log_location = $attributes['log_dir'];
         } else {
@@ -137,30 +136,32 @@ class Connect
 
         if (isset($attributes['log_name'])) {
             $this->p_log_name = $attributes['log_name'];
+
             if (!preg_match("/\.log$/", $this->p_log_name)) {
-                $this->p_log_name .= ".log";
+                $this->p_log_name .= '.log';
             }
         } else {
-            $this->p_log_name = $this->pGenRandomString() . "." . time() . ".log";
+            $this->p_log_name = $this->pGenRandomString() . '.' . time() . '.log';
         }
+
         if (isset($attributes['log_tag'])) {
             $this->p_log = new Logger($attributes['log_tag']);
         } else {
             $this->p_log = new Logger($this->p_log_tag);
         }
 
-        if (isset($attributes['log_level']) && in_array($attributes['log_level'], $this->log_literals)) {
-            if ($attributes['log_level'] == "debug") {
+        if (isset($attributes['log_level']) && in_array($attributes['log_level'], $this->log_literals, true)) {
+            if ($attributes['log_level'] == 'debug') {
                 $this->p_log->pushHandler(new StreamHandler($this->pGetLogPath(), Logger::DEBUG));
-            } elseif ($attributes['log_level'] == "info") {
+            } elseif ($attributes['log_level'] == 'info') {
                 $this->p_log->pushHandler(new StreamHandler($this->pGetLogPath(), Logger::INFO));
-            } elseif ($attributes['log_level'] == "notice") {
+            } elseif ($attributes['log_level'] == 'notice') {
                 $this->p_log->pushHandler(new StreamHandler($this->pGetLogPath(), Logger::NOTICE));
-            } elseif ($attributes['log_level'] == "warning") {
+            } elseif ($attributes['log_level'] == 'warning') {
                 $this->p_log->pushHandler(new StreamHandler($this->pGetLogPath(), Logger::WARNING));
-            } elseif ($attributes['log_level'] == "error") {
+            } elseif ($attributes['log_level'] == 'error') {
                 $this->p_log->pushHandler(new StreamHandler($this->pGetLogPath(), Logger::ERROR));
-            } elseif ($attributes['log_level'] == "critical") {
+            } elseif ($attributes['log_level'] == 'critical') {
                 $this->p_log->pushHandler(new StreamHandler($this->pGetLogPath(), Logger::CRITICAL));
             } else {
                 $this->p_log->pushHandler(new StreamHandler($this->pGetLogPath(), Logger::WARNING));
@@ -175,9 +176,7 @@ class Connect
      * getLogLocation
      * Alias to Get Log Path
      *
-     *
      * @return string
-     *
      */
     public function getLogLocation()
     {
@@ -191,7 +190,6 @@ class Connect
      * @param array $header
      *
      * @return void
-     *
      */
     public function setRateVars($header)
     {
@@ -204,15 +202,14 @@ class Connect
      * getDeviceList
      * Returns Full Device List Array
      *
-     *
      * @return array
-     *
      */
     public function getDeviceList()
     {
         $url = self::API_URL . self::DEVICE_ENDPOINT;
-        $response = $this->makeAPICall("GET", $url);
+        $response = $this->makeAPICall('GET', $url);
         $body_array = json_decode($response->getBody(), true);
+
         return $body_array['data']['devices'];
     }
 
@@ -220,9 +217,7 @@ class Connect
      * getDeviceCount
      * Returns total number of controllable devices
      *
-     *
      * @return int
-     *
      */
     public function getDeviceCount()
     {
@@ -233,16 +228,16 @@ class Connect
      * getDeviceMACArray
      * Returns array of controllable MAC addresses
      *
-     *
      * @return array
-     *
      */
     public function getDeviceMACArray()
     {
         $array = $this->getDeviceList();
+
         foreach ($array as $devices) {
             $dev[] = $devices['device'];
         }
+
         return $dev;
     }
 
@@ -250,16 +245,16 @@ class Connect
      * getDeviceNameArray
      * Returns Array of Device Names
      *
-     *
      * @return array
-     *
      */
     public function getDeviceNameArray()
     {
         $array = $this->getDeviceList();
+
         foreach ($array as $devices) {
             $dev[] = $devices['deviceName'];
         }
+
         return $dev;
     }
 
@@ -267,9 +262,7 @@ class Connect
      * getAPIToken
      * Returns the stored API Token
      *
-     *
      * @return string
-     *
      */
     protected function getAPIToken()
     {
@@ -280,9 +273,7 @@ class Connect
      * getLogPointer
      * Returns a referencd to the logger
      *
-     *
      * @return reference
-     *
      */
     public function getLogPointer()
     {
@@ -293,9 +284,7 @@ class Connect
      * pGetLogPath
      * Returns full path and name of the log file
      *
-     *
      * @return string
-     *
      */
     protected function pGetLogPath()
     {
@@ -306,18 +295,15 @@ class Connect
      * setHeaders
      * Sets the headers using the API Token
      *
-     *
      * @return array
-     *
      */
     public function setHeaders()
     {
-        $array = [
+        return [
             'User-Agent' => 'testing/1.0',
             'Content-Type' => 'application/json',
-            'Govee-API-Key' => $this->getAPIToken()
+            'Govee-API-Key' => $this->getAPIToken(),
         ];
-        return $array;
     }
 
     /**
@@ -327,24 +313,25 @@ class Connect
      * @param int $length
      *
      * @return string
-     *
      */
     private function pGenRandomString($length = 6)
     {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
         $charactersLength = strlen($characters);
         $randomString = '';
-        for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, $charactersLength - 1)];
+
+        for ($i = 0; $i < $length; ++$i) {
+            $randomString .= $characters[mt_rand(0, $charactersLength - 1)];
         }
+
         return $randomString;
     }
-
 
     public function makeAPICall($type, $url, $body = null)
     {
         $data['headers'] = $this->setHeaders();
         $data['body'] = $body;
+
         if ($this->checkPing()) {
             try {
                 $request = $this->client->request($type, $url, $data);
@@ -352,11 +339,13 @@ class Connect
                 if ($e->hasResponse()) {
                     $response = $e->getResponse();
                     print $response->getBody();
+
                     exit;
                 }
             }
         }
         $this->setRateVars($request->getHeaders());
+
         return $request;
     }
 
@@ -364,6 +353,7 @@ class Connect
     {
         $url = self::API_URL . self::PING_ENDPOINT;
         $response = $this->client->request('GET', $url);
+
         if ($response->getStatusCode() == 200) {
             // in future we might want to regex match the word
             // pong (case insensitive) which is what their endpoint
@@ -371,20 +361,18 @@ class Connect
             // looking for a specific word
             //if (preg_match("/pong/i", $response->getBody())) {
             return true;
-        } else {
-            die("API Seems Offline or you have connectivity issues at present.");
         }
+
+        die('API Seems Offline or you have connectivity issues at present.');
     }
 
     public function lights()
     {
-        $lights = new Lights($this);
-        return $lights;
+        return new Lights($this);
     }
 
     public function plugs()
     {
-        $plugs = new Plugs($this);
-        return $plugs;
+        return new Plugs($this);
     }
 }

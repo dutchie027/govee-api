@@ -4,8 +4,8 @@ namespace dutchie027\govee;
 
 class Plugs
 {
-    private $name_array = array();
-    private $mac_array = array();
+    private $name_array = [];
+    private $mac_array = [];
     protected $client;
 
     /**
@@ -24,7 +24,6 @@ class Plugs
      * @param string $device
      *
      * @return string
-     *
      */
     public function turnOn($device)
     {
@@ -32,12 +31,13 @@ class Plugs
         $data['headers'] = $this->client->setHeaders();
         $body['device'] = $mac;
         $body['model'] = $this->model_array[$mac];
-        $body['cmd']['name'] = "turn";
-        $body['cmd']['value'] = "on";
+        $body['cmd']['name'] = 'turn';
+        $body['cmd']['value'] = 'on';
         $data['body'] = json_encode($body);
 
         $response = $this->client->client->request('PUT', $this->client::DEVICE_CONTROL, $data);
         $this->client->setRateVars($response->getHeaders());
+
         return $response->getBody();
     }
 
@@ -48,7 +48,6 @@ class Plugs
      * @param string $device
      *
      * @return string
-     *
      */
     public function turnOff($device)
     {
@@ -56,12 +55,13 @@ class Plugs
         $data['headers'] = $this->client->setHeaders();
         $body['device'] = $mac;
         $body['model'] = $this->model_array[$mac];
-        $body['cmd']['name'] = "turn";
-        $body['cmd']['value'] = "off";
+        $body['cmd']['name'] = 'turn';
+        $body['cmd']['value'] = 'off';
         $data['body'] = json_encode($body);
 
         $response = $this->client->client->request('PUT', $this->client::DEVICE_CONTROL, $data);
         $this->client->setRateVars($response->getHeaders());
+
         return $response->getBody();
     }
 
@@ -72,19 +72,18 @@ class Plugs
      * @param int $device
      *
      * @return string
-     *
      */
     private function getDeviceMAC($device)
     {
         if (preg_match('/^([a-fA-F0-9]{2}\:){7}[a-fA-F0-9]{2}$/', $device)) {
             return $device;
-        } else {
-            if (in_array($device, $this->mac_array)) {
-                return $this->name_array[$device];
-            } else {
-                die("Device Not Found");
-            }
         }
+
+        if (in_array($device, $this->mac_array, true)) {
+            return $this->name_array[$device];
+        }
+
+        die('Device Not Found');
     }
 
     /**
@@ -92,15 +91,14 @@ class Plugs
      * Called by the constructor. Pre-Loads arrays/hashes to reference
      * a plug by either MAC address or name
      *
-     *
      * @return void
-     *
      */
     private function getPlugs()
     {
         $all_devices = $this->client->getDeviceList();
+
         foreach ($all_devices as $device) {
-            if (!in_array("color", $device['supportCmds'])) {
+            if (!in_array('color', $device['supportCmds'], true)) {
                 $name = $device['deviceName'];
                 $mac = $device['device'];
                 $model = $device['model'];
@@ -118,13 +116,13 @@ class Plugs
      * @param string $device
      *
      * @return string
-     *
      */
     public function getDeviceState($device)
     {
         $mac = $this->getDeviceMAC($device);
-        $url = $this->client::DEVICE_STATE . "?device=" . $mac . "&model=" . $this->model_array[$mac];
-        $response = $this->client->makeAPICall("GET", $url);
+        $url = $this->client::DEVICE_STATE . '?device=' . $mac . '&model=' . $this->model_array[$mac];
+        $response = $this->client->makeAPICall('GET', $url);
+
         return $response->getBody();
     }
 }

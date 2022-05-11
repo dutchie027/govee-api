@@ -4,8 +4,8 @@ namespace dutchie027\govee;
 
 class Lights
 {
-    private $name_array = array();
-    private $mac_array = array();
+    private $name_array = [];
+    private $mac_array = [];
     protected $client;
 
     /**
@@ -24,7 +24,6 @@ class Lights
      * @param string $device
      *
      * @return string
-     *
      */
     public function turnOn($device)
     {
@@ -32,12 +31,13 @@ class Lights
         $data['headers'] = $this->client->setHeaders();
         $body['device'] = $mac;
         $body['model'] = $this->model_array[$mac];
-        $body['cmd']['name'] = "turn";
-        $body['cmd']['value'] = "on";
+        $body['cmd']['name'] = 'turn';
+        $body['cmd']['value'] = 'on';
         $data['body'] = json_encode($body);
 
         $response = $this->client->client->request('PUT', $this->client::DEVICE_CONTROL, $data);
         $this->client->setRateVars($response->getHeaders());
+
         return $response->getBody();
     }
 
@@ -48,7 +48,6 @@ class Lights
      * @param string $device
      *
      * @return string
-     *
      */
     public function turnOff($device)
     {
@@ -56,12 +55,13 @@ class Lights
         $data['headers'] = $this->client->setHeaders();
         $body['device'] = $mac;
         $body['model'] = $this->model_array[$mac];
-        $body['cmd']['name'] = "turn";
-        $body['cmd']['value'] = "off";
+        $body['cmd']['name'] = 'turn';
+        $body['cmd']['value'] = 'off';
         $data['body'] = json_encode($body);
 
         $response = $this->client->client->request('PUT', $this->client::DEVICE_CONTROL, $data);
         $this->client->setRateVars($response->getHeaders());
+
         return $response->getBody();
     }
 
@@ -72,19 +72,18 @@ class Lights
      * @param int $device
      *
      * @return string
-     *
      */
     private function getDeviceMAC($device)
     {
         if (preg_match('/^([a-fA-F0-9]{2}\:){7}[a-fA-F0-9]{2}$/', $device)) {
             return $device;
-        } else {
-            if (in_array($device, $this->mac_array)) {
-                return $this->name_array[$device];
-            } else {
-                die("Device Not Found");
-            }
         }
+
+        if (in_array($device, $this->mac_array, true)) {
+            return $this->name_array[$device];
+        }
+
+        die('Device Not Found');
     }
 
     /**
@@ -92,15 +91,14 @@ class Lights
      * Called by the constructor. Pre-Loads arrays/hashes to reference
      * lights by either MAC address or name
      *
-     *
      * @return void
-     *
      */
     private function getLights()
     {
         $all_devices = $this->client->getDeviceList();
+
         foreach ($all_devices as $device) {
-            if (in_array("color", $device['supportCmds'])) {
+            if (in_array('color', $device['supportCmds'], true)) {
                 $name = $device['deviceName'];
                 $mac = $device['device'];
                 $model = $device['model'];
@@ -116,23 +114,23 @@ class Lights
      * Sets brightness based on MAC or Name ($device) and Brigthness Level ($bl)
      *
      * @param string $device
-     * @param int $bl
+     * @param int    $bl
      *
      * @return string
-     *
      */
     public function setBrightness($device, $bl)
     {
         if (!is_numeric($bl) || $bl > 100 || $bl < 0) {
-            die("Brigthness must be numeric between 0 and 100");
+            die('Brigthness must be numeric between 0 and 100');
         }
         $mac = $this->getDeviceMAC($device);
         $body['device'] = $mac;
         $body['model'] = $this->model_array[$mac];
-        $body['cmd']['name'] = "brightness";
+        $body['cmd']['name'] = 'brightness';
         $body['cmd']['value'] = $bl;
 
-        $response = $this->client->makeAPICall("PUT", $this->client::DEVICE_CONTROL, json_encode($body));
+        $response = $this->client->makeAPICall('PUT', $this->client::DEVICE_CONTROL, json_encode($body));
+
         return $response->getBody();
     }
 
@@ -141,24 +139,24 @@ class Lights
      * Sets light temperature based on MAC or Name ($device) and temperature level ($tl)
      *
      * @param string $device
-     * @param int $tl
+     * @param int    $tl
      *
      * @return string
-     *
      */
     public function setTemp($device, $tl)
     {
         if (!is_numeric($tl) || $tl > 9000 || $tl < 2000) {
-            die("Brigthness must be numeric between 2000 and 9000");
+            die('Brigthness must be numeric between 2000 and 9000');
         }
         $mac = $this->getDeviceMAC($device);
 
         $body['device'] = $mac;
         $body['model'] = $this->model_array[$mac];
-        $body['cmd']['name'] = "colorTem";
+        $body['cmd']['name'] = 'colorTem';
         $body['cmd']['value'] = $tl;
 
-        $response = $this->client->makeAPICall("PUT", $this->client::DEVICE_CONTROL, json_encode($body));
+        $response = $this->client->makeAPICall('PUT', $this->client::DEVICE_CONTROL, json_encode($body));
+
         return $response->getBody();
     }
 
@@ -167,23 +165,23 @@ class Lights
      * Sets the RGB Color of a strand of lights based on MAC or Name ($device) and RGB
      *
      * @param string $device
-     * @param int $r
-     * @param int $g
-     * @param int $b
+     * @param int    $r
+     * @param int    $g
+     * @param int    $b
      *
      * @return string
-     *
      */
     public function setColor($device, $r, $g, $b)
     {
         $mac = $this->getDeviceMAC($device);
         $body['device'] = $mac;
         $body['model'] = $this->model_array[$mac];
-        $body['cmd']['name'] = "color";
+        $body['cmd']['name'] = 'color';
         $body['cmd']['value']['r'] = $r;
         $body['cmd']['value']['g'] = $g;
         $body['cmd']['value']['b'] = $b;
-        $response = $this->client->makeAPICall("PUT", $this->client::DEVICE_CONTROL, json_encode($body));
+        $response = $this->client->makeAPICall('PUT', $this->client::DEVICE_CONTROL, json_encode($body));
+
         return $response->getBody();
     }
 
@@ -194,13 +192,13 @@ class Lights
      * @param string $device
      *
      * @return string
-     *
      */
     public function getDeviceState($device)
     {
         $mac = $this->getDeviceMAC($device);
-        $url = $this->client::DEVICE_STATE . "?device=" . $mac . "&model=" . $this->model_array[$mac];
-        $response = $this->client->makeAPICall("GET", $url);
+        $url = $this->client::DEVICE_STATE . '?device=' . $mac . '&model=' . $this->model_array[$mac];
+        $response = $this->client->makeAPICall('GET', $url);
+
         return $response->getBody();
     }
 }
