@@ -195,9 +195,9 @@ class Connect
      */
     public function setRateVars($header)
     {
-        $this->rate_remain = $header['RateLimit-Remaining'];
-        $this->rate_reset = $header['RateLimit-Reset'];
-        $this->rate_total = $header['RateLimit-Limit'];
+        $this->rate_remain = $header['X-RateLimit-Remaining'];
+        $this->rate_reset = $header['X-RateLimit-Reset'];
+        $this->rate_total = $header['X-RateLimit-Limit'];
     }
 
     /**
